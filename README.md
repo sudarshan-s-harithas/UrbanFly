@@ -14,7 +14,7 @@ UrbanFly: an uncertainty-aware realtime planning framework for quadrotor navigat
 
 The planner evaluations were done on an 8-Core Intel Core i7-10870H processor, with 16GB RAM and 500GB HDD, running Ubunut 18.04 and ros melodic. we do recommend using powerfull setup.
 
-A simulation server was setup that hosted the simulation environments within the Unreal Engine. 
+A simulation server with NVIDIA1070 graphics card, AMD Ryzen 7 3800x 8-core processor× 16 CPU, and 64GB RAM and 1TB HDD was setup that hosted the simulation environments within the Unreal Engine. 
 
 ### Pre-requisites
 
