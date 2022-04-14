@@ -10,3 +10,16 @@ UrbanFly: an uncertainty-aware realtime planning framework for quadrotor navigat
 ### **Note: This code repository is under developent** 
 
 
+## Setup:
+
+The planner evaluations were done on an 8-Core Intel Core i7-10870H processor, with 16GB RAM and 500GB HDD, running Ubunut 18.04 and ros melodic. we do recommend using powerfull setup.
+
+A simulation server was setup that hosted the simulation environments within the Unreal Engine. 
+
+### Pre-requisites
+
+[ROS Melodic](http://wiki.ros.org/melodic/Installation/Ubuntu) <br />
+[Unreal](https://docs.unrealengine.com/4.26/en-US/Basics/InstallingUnrealEngine/)
+[AirSim ROS Wrapper](https://microsoft.github.io/AirSim/airsim_ros_pkgs/)
+[PlaneRCNN](https://github.com/NVlabs/planercnn)
+[farneback3d](https://github.com/theHamsta/farneback3d)
