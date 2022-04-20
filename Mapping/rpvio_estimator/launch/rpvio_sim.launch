@@ -1,0 +1,53 @@
+<launch>
+
+  <arg name="playback_rate" default="0.2" />
+  <arg name="start_from" default="2.5" />
+  <arg name="bagfile_path" default="/home/karnik/dataset/rpvio-sim/static/static.bag"/>
+
+  <arg name="config_path" default = "$(find rpvio_estimator)/../config/rpvio_sim_config.yaml" />
+  <arg name="rpvio_path" default = "$(find rpvio_feature_tracker)/../config/../" />
+  <arg name="sequence_name" default = "minihattan" />
+
+  <!-- RP-VIO nodes -->
+  <!-- <node name="rpvio_feature_tracker" pkg="rpvio_feature_tracker" type="rpvio_feature_tracker" output="log">
+    <param name="config_file" type="string" value="$(arg config_path)" />
+    <param name="rpvio_folder" type="string" value="$(arg rpvio_path)" />
+  </node>
+
+  <node name="rpvio_estimator" pkg="rpvio_estimator" type="rpvio_estimator" output="screen">
+    <param name="config_file" type="string" value="$(arg config_path)" />
+    <param name="rpvio_folder" type="string" value="$(arg rpvio_path)" />
+  </node> -->
+
+  <!-- <node name="benchmark_publisher" pkg="benchmark_publisher" type="benchmark_publisher" output="screen">
+    <param name="data_name" type="string" value="$(find benchmark_publisher)/config/$(arg sequence_name)/data.csv" />
+  </node> -->
+
+  <remap from="/point_cloud" to="/vins_estimator/point_cloud" />
+  <remap from="/odometry" to="/vins_estimator/odometry" />
+
+  <node name="rpvio_mapper" pkg="rpvio_estimator" type="rpvio_mapper" output="screen">
+    <param name="config_file" type="string" value="$(arg config_path)" />
+    <param name="rpvio_folder" type="string" value="$(arg rpvio_path)" />
+  </node>
+
+
+<!--   <node name="rpvio_planner" pkg="rpvio_estimator" type="rpvio_planner" output="log">
+
+    <param name="config_file" type="string" value="$(arg config_path)" />
+    <param name="rpvio_folder" type="string" value="$(arg rpvio_path)" />
+  </node> -->
+
+  <!--<node name="path_commander" pkg="rpvio_estimator" type="path_commander.py" output="screen">
+  </node> -->
+
+<!-- 
+  <node name="republish1" type="republish" pkg="image_transport" output="screen" args="compressed in:=/airsim_node/drone/0/Scene raw out:=/image" /> 
+  <node name="republish2" type="republish" pkg="image_transport" output="screen" args="compressed in:=/airsim_node/drone/0/Segmentation raw out:=/mask" /> -->
+
+  <!-- <node name="throttle1" pkg="topic_tools" type="throttle" args="messages /airsim_node/drone/imu/Imu 200 /imu_throttled"/>
+  <node name="throttle2" pkg="topic_tools" type="throttle" args="messages /airsim_node/drone/0/Scene 20 /image_throttled"/>
+  <node name="throttle3" pkg="topic_tools" type="throttle" args="messages /airsim_node/drone/0/Segmentation 20 /mask_throttled"/> -->
+
+  <node name="rvizvisualisation" pkg="rviz" type="rviz" output="log" args="-d $(find rpvio_estimator)/../config/rpvio_skyline2.rviz" />
+</launch>
