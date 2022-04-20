@@ -27,6 +27,13 @@ A simulation server with NVIDIA1070 graphics card, AMD Ryzen 7 3800x 8-core proc
 
 ## Build
 
+
+### Start the Simulation 
+
+The Unreal Engine with the drone and the simulation environment would run on a remote server and the mapping and planning modules would be implemented on the local computer. Start the simulation and run the below command to connect Airsim to the remote host. Also do-not forget to configure ROS Master  slave . 
+'''
+roslaunch airsim_ros_pkgs airsim_node.launch  host:=<ENTER_IP>
+'''
 ### State Estimation and Mapping
 
 ### CEM Planner 
