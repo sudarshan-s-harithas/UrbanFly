@@ -38,6 +38,11 @@ roslaunch airsim_ros_pkgs airsim_node.launch  host:=<ENTER_IP>
 
 ### CEM Planner 
 
+Once the VINS is initilized and the planar map of the environment can be observed we are all set to start the CEM planner. Use the command given below to start the planner. 
+
+```
+rosrun UrbanFlyCEMPlanner CEMPlanner
+```
 
 ### Implementation
 
