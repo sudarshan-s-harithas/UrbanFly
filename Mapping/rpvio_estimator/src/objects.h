@@ -380,7 +380,7 @@ public:
         setIsometryFromNormal();
     }
 
-// protected:
+protected:
     FloatingPoint breadth_;
     FloatingPoint width_;
     FloatingPoint height_;

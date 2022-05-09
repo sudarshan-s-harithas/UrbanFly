@@ -11,9 +11,9 @@ import numpy as np
 from box_world import BoxWorld
 
 import sys
-# sys.path.remove('/opt/ros/kinetic/lib/python2.7/dist-packages')
+sys.path.remove('/opt/ros/kinetic/lib/python2.7/dist-packages')
 import cv2
-# sys.path.append('/opt/ros/kinetic/lib/python2.7/dist-packages')
+sys.path.append('/opt/ros/kinetic/lib/python2.7/dist-packages')
 
 is_init_path = False
 
@@ -24,7 +24,7 @@ class Planner:
     ric = np.eye(3)
     ti = np.zeros(3)
     ri = np.eye(3)
-    global_goal = np.array([23.0, -5.0, 5.0])
+    global_goal = np.array([20, -10, 1.0])
 
     def __init__(self, vertices_msg, odometry_msg, local_goal_pub, local_stomp_pub, feasible_path_pub, free_cloud_pub, colliding_cloud_pub):
         self.vertices_msg = vertices_msg
@@ -80,7 +80,7 @@ class Planner:
 
     def compute_stomp_paths(self):
         num_goal = self.num_of_paths
-        num = max(int(np.linalg.norm(self.local_goal)), 3)
+        num = max(int(1.75*np.linalg.norm(self.local_goal)), 3)
         self.num = num
 
         x_init =  0.0

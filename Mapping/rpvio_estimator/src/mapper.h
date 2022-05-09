@@ -103,9 +103,7 @@ ros::Publisher frame_pub2;
 ros::Publisher masked_im_pub;
 ros::Publisher lgoal_pub;
 ros::Publisher dense_pub;
-ros::Publisher PointCloud2_pub ;
 
-ros::Subscriber PCD_PCD2sub;
 struct Plane
 {
     Vector4d plane;
@@ -127,6 +125,7 @@ struct PlaneFeature
 map<double, vector<Vector4d>> plane_measurements;
 map<int, Plane> mPlaneFeatureIds;
 map<int, PlaneFeature> mFeatures;
+int plane_id_counter = 1000;
 
 /**
  * Implements vector1.dot(vector2) == 0 constraint
@@ -897,7 +896,6 @@ bool fit_cuboid_to_point_cloud(Vector4d plane_params, vector<Vector3d> points, v
         Vector3d point = points[i];
 
         if (get_absolute_point_plane_distance(point, plane_params) > 1.25)
-
            continue;
 
         double nd = -normal.dot(point);
@@ -964,7 +962,7 @@ bool fit_cuboid_to_point_cloud(Vector4d plane_params, vector<Vector3d> points, v
         vertices.push_back(pt);
         
         Vector3d t_pt(pt.x, 0.0, pt.z);
-        if (t_pt.norm() > 50)
+        if (t_pt.norm() > 300)
             return false;
     }
 
@@ -1332,7 +1330,7 @@ Vector4d fit_vertical_plane_ransac(vector<Vector3d> &plane_points, int plane_id)
     int N = (int)(log(1 - p) / log(1 - pow(1 - e, s)));
     N++;
 
-    double plane_distance_threshold =  1.5 ;   // 1.25;
+    double plane_distance_threshold = 1.25;
 
     int bestNumOfInliers = 4;
     Vector4d bestFit;
@@ -1424,4 +1422,130 @@ map<int, vector<Vector3d>> cluster_depth_cloud(cv_bridge::CvImagePtr depth_ptr, 
     }
 
     return mDenseClusters;
+}
+
+void update_global_point_cloud(
+    const sensor_msgs::PointCloudConstPtr &features_msg,
+    cv::Mat &mask_img,
+    Isometry3d world2local
+)
+{
+    ROS_INFO("Point cloud has %d channels", (int)features_msg->channels.size());
+
+    map<int, vector<int>> mCurrentPlaneFeatures;
+    map<int, int> mCurrentIdToPrevId;
+
+    map<int, Vector3d> current_features;
+
+    std::map<unsigned long, int> color_index;
+
+    for (int fid = 0; fid < features_msg->points.size(); fid++)
+    {
+        int feature_id = (int)features_msg->channels[2].values[fid];
+
+        // Compute current id first
+        Vector3d fpoint;
+        geometry_msgs::Point32 p = features_msg->points[fid];
+        fpoint << p.x, p.y, p.z;
+
+        int u = (int)features_msg->channels[0].values[fid];
+        int v = (int)features_msg->channels[1].values[fid];
+
+        Vector3d lpoint = world2local * fpoint;
+        Eigen::Matrix3d K;
+        K << FOCAL_LENGTH, 0, COL/2,
+            0, FOCAL_LENGTH, ROW/2,
+            0, 0, 1;
+
+        Vector3d pt = K * lpoint;
+        pt /= pt[2];
+
+        u = (int)pt.x();
+        v = (int)pt.y();
+        
+        int current_plane_id = get_plane_id(u, v, mask_img);
+        if ((current_plane_id == 0) || (current_plane_id == 39))
+            continue;
+            
+        if (mCurrentPlaneFeatures.find(current_plane_id) == mCurrentPlaneFeatures.end())
+        {
+            std::vector<int> curr_plane_feature_ids;
+            mCurrentPlaneFeatures[current_plane_id] = curr_plane_feature_ids;
+        }
+
+        if (mFeatures.find(feature_id) != mFeatures.end()) 
+        {
+            mCurrentIdToPrevId[current_plane_id] = mFeatures[feature_id].plane_id;
+        }
+        
+        mCurrentPlaneFeatures[current_plane_id].push_back(feature_id);
+        current_features[feature_id] = fpoint;
+    }
+
+    /**
+     * feature id is not there in the current map
+     * there are three cases for this feature point
+     * case 1: it belongs to already mapped planes
+     * case 2: it belongs to a new plane
+     * case 3: it is invalid (not inside any mask)
+     * 
+     * feature belongs to a existing plane
+     * this should be used to map current plane id with existing plane id
+     */
+    for(auto mCPF: mCurrentPlaneFeatures) {
+        int current_plane_id = mCPF.first;
+
+        // one of the features in current cloud belongs to existing planes
+        if (mCurrentIdToPrevId.find(current_plane_id) != mCurrentIdToPrevId.end())
+        {
+            int previous_plane_id = mCurrentIdToPrevId[current_plane_id];
+            if ((previous_plane_id == 0) || (previous_plane_id == 39))
+                continue;
+
+            for (int cfid = 0; cfid < mCurrentPlaneFeatures[current_plane_id].size(); cfid++) 
+            {   
+                int feature_id = mCurrentPlaneFeatures[current_plane_id][cfid];
+
+                // add this feature to existing plane
+                if (mFeatures.find(feature_id) == mFeatures.end()) 
+                {
+                    mPlaneFeatureIds[previous_plane_id].feature_ids.insert(feature_id);
+
+                    PlaneFeature new_plane_feature;
+                    new_plane_feature.plane_id = previous_plane_id;
+                    mFeatures[feature_id] = new_plane_feature;
+                }
+
+                mFeatures[feature_id].point = current_features[feature_id];
+                mFeatures[feature_id].measurement_count++;
+            }
+        }
+        else // these cluster of features in current frame belong to a new plane
+        {
+            int new_plane_id = plane_id_counter;
+            plane_id_counter++;
+            for (int cfid = 0; cfid < mCurrentPlaneFeatures[current_plane_id].size(); cfid++) 
+            {   
+                int feature_id = mCurrentPlaneFeatures[current_plane_id][cfid];
+
+                Plane new_plane;
+                new_plane.plane_id = new_plane_id;
+                    
+                mPlaneFeatureIds[new_plane_id] = new_plane;
+
+                // add this feature to existing plane
+                if (mFeatures.find(feature_id) == mFeatures.end())
+                {
+                    mPlaneFeatureIds[new_plane_id].feature_ids.insert(feature_id);
+
+                    PlaneFeature new_plane_feature;
+                    new_plane_feature.plane_id = new_plane_id;
+                    mFeatures[feature_id] = new_plane_feature;
+                }
+
+                mFeatures[feature_id].point = current_features[feature_id];
+                mFeatures[feature_id].measurement_count++;
+            }
+        }
+    }
 }
