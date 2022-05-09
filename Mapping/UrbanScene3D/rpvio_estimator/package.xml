@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package>
+  <name>rpvio_estimator</name>
+  <version>0.0.0</version>
+  <description>The vins_estimator package</description>
+
+  <maintainer email="karnikram@gmail.com">karnikram</maintainer>
+  <license>GPLv3</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>rospy</build_depend>
+  <build_depend>libpcl-all-dev</build_depend>
+  <run_depend>roscpp</run_depend>
+  <run_depend>rospy</run_depend>
+  <run_depend>libpcl-all</run_depend>
+
+</package>

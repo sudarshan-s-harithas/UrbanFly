@@ -1,0 +1,6 @@
+int64 frame_id
+sensor_msgs/Image rgb_image
+sensor_msgs/Image building_mask_image
+---
+int64 frame_id
+sensor_msgs/Image img
