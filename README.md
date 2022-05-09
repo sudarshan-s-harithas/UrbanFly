@@ -34,7 +34,24 @@ The Unreal Engine with the drone and the simulation environment would run on a r
 ```
 roslaunch airsim_ros_pkgs airsim_node.launch  host:=<ENTER_IP>
 ```
-### State Estimation and Mapping
+### State Estimation 
+
+Clone [VINS-Mono]() repo and apply the VINS-Mono.patch file. It adds unique feature ids to feature points in the point cloud topic. 
+
+### Mapping
+
+
+In Synthetic dataset (SquareStreet), ground truth masks are used. Whereas, for UrbanScene3D, Plance-RCNN is used to segment the planar facades.
+
+In either case, mapper node can launched using the following command.
+
+```
+roslaunch rpvio_estimator minihattan.launch
+```
+
+Additionally, for UrbanScene3D, ros-wrapper over PlaneRCNN should be lauched.
+
+### SCP-MMD Planner
 
 ### CEM Planner 
 
