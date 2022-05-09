@@ -36,7 +36,7 @@ roslaunch airsim_ros_pkgs airsim_node.launch  host:=<ENTER_IP>
 ```
 ### State Estimation 
 
-Clone [VINS-Mono]() repo and apply the VINS-Mono.patch file. It adds unique feature ids to feature points in the point cloud topic. 
+Clone [VINS-Mono]() repo and apply the vins_mono_changes.patch file. It adds unique feature ids to feature points in the point cloud topic. 
 
 ### Mapping
 

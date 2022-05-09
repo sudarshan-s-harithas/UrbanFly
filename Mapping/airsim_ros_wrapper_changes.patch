@@ -1,0 +1,449 @@
+diff --git a/my_airsim_changes.patch b/my_airsim_changes.patch
+index a5b9d56..e69de29 100644
+--- a/my_airsim_changes.patch
++++ b/my_airsim_changes.patch
+@@ -1,444 +0,0 @@
+-diff --git a/PythonClient/multirotor/box.py b/PythonClient/multirotor/box.py
+-index 83b2c7d..ba021b0 100644
+---- a/PythonClient/multirotor/box.py
+-+++ b/PythonClient/multirotor/box.py
+-@@ -4,7 +4,7 @@ import airsim
+- import sys
+- import time
+- 
+--client = airsim.MultirotorClient()
+-+client = airsim.MultirotorClient(ip='10.2.36.169')
+- client.confirmConnection()
+- client.enableApiControl(True)
+- client.armDisarm(True)
+-diff --git a/PythonClient/multirotor/hello_drone.py b/PythonClient/multirotor/hello_drone.py
+-index a9b4a4f..be7be5b 100644
+---- a/PythonClient/multirotor/hello_drone.py
+-+++ b/PythonClient/multirotor/hello_drone.py
+-@@ -8,7 +8,7 @@ import pprint
+- import cv2
+- 
+- # connect to the AirSim simulator
+--client = airsim.MultirotorClient()
+-+client = airsim.MultirotorClient(ip='10.2.36.169')
+- client.confirmConnection()
+- client.enableApiControl(True)
+- 
+-@@ -35,13 +35,13 @@ print("gps_data: %s" % s)
+- airsim.wait_key('Press any key to takeoff')
+- print("Taking off...")
+- client.armDisarm(True)
+--client.takeoffAsync().join()
+-+# client.takeoffAsync().join()
+- 
+- state = client.getMultirotorState()
+- print("state: %s" % pprint.pformat(state))
+- 
+- airsim.wait_key('Press any key to move vehicle to (-10, 10, -10) at 5 m/s')
+--client.moveToPositionAsync(-10, 10, -10, 5).join()
+-+client.moveToPositionAsync(-14959.680664-100, -10830.398438-100, 23100.097656+2000, 5).join()
+- 
+- client.hoverAsync().join()
+- 
+-diff --git a/PythonClient/multirotor/orbit.py b/PythonClient/multirotor/orbit.py
+-index 78d9a23..00a1382 100644
+---- a/PythonClient/multirotor/orbit.py
+-+++ b/PythonClient/multirotor/orbit.py
+-@@ -44,7 +44,7 @@ class OrbitNavigator:
+-         cx *= self.radius
+-         cy *= self.radius
+- 
+--        self.client = airsim.MultirotorClient()
+-+        self.client = airsim.MultirotorClient(ip='10.2.36.169')
+-         self.client.confirmConnection()
+-         self.client.enableApiControl(True)
+- 
+-diff --git a/PythonClient/multirotor/pause_continue_drone.py b/PythonClient/multirotor/pause_continue_drone.py
+-index efdb620..4913747 100644
+---- a/PythonClient/multirotor/pause_continue_drone.py
+-+++ b/PythonClient/multirotor/pause_continue_drone.py
+-@@ -4,7 +4,7 @@ import airsim
+- import time
+- 
+- # connect to the AirSim simulator
+--client = airsim.MultirotorClient()
+-+client = airsim.MultirotorClient(ip="10.2.36.169")
+- client.confirmConnection()
+- client.enableApiControl(True)
+- client.armDisarm(True)
+-@@ -18,14 +18,15 @@ for i in range(1, 6):
+-     client.moveByVelocityZAsync(-1*i, -1*i, -20-i, 15)
+-     time.sleep(5) #run
+-     print("Pausing after 5sec")
+--    client.simPause(True)
+--    time.sleep(5) #paused
+-+    #client.simPause(True)
+-+    #time.sleep(5) #paused
+-     print("Restarting command to run for 7.5sec")
+--    client.simContinueForTime(7.5) 
+-+    client.moveByVelocityZAsync(-1, -1-0.5, -20-i, 15)
+-+    #client.simContinueForTime(7.5) 
+-     time.sleep(10)
+-     print("Finishing rest of the command")
+--    client.simPause(False)
+--    time.sleep(15)
+-+    #client.simPause(False)
+-+    #time.sleep(15)
+-     print("Finished cycle")
+- 
+- 
+-diff --git a/PythonClient/multirotor/sine.txt b/PythonClient/multirotor/sine.txt
+-new file mode 100644
+-index 0000000..fe614a5
+---- /dev/null
+-+++ b/PythonClient/multirotor/sine.txt
+-@@ -0,0 +1,35 @@
+-+-2 0 -7.0
+-+-1.66 -2.75 -5
+-+-1.31 -5.5 -3.0
+-+-0.97 -8.25 -5.0
+-+-0.625 -11.0 -7.0
+-+-0.281 -13.75 -5
+-+-0.063 -16.5 -3.0
+-+0.41 -19.25 -5
+-+0.75 -22.0 -7.0
+-+1 -24 -7.0
+-+2.75 -23.76 -5.0
+-+5.5 -23.386 -3.0
+-+8.25 -23.011 -5.0
+-+11.0 -22.636 -7.0
+-+13.75 -22.261 -5.0
+-+16.5 -21.886 -3.0
+-+19.25 -21.511 -5.0
+-+22.0 -21.136 -7.0
+-+23.0 -21 -7.0
+-+22.737 -19.25 -5.0
+-+22.325 -16.5 -3.0
+-+21.912 -13.75 -5.0
+-+21.5 -11.0 -7.0
+-+21.087 -8.25 -5.0
+-+20.675 -5.5 -3.0
+-+20.2625 -2.75 -5.0
+-+20 -1 -7.0
+-+19.25 -0.966 -5.0
+-+16.5 -0.841 -3.0
+-+13.75 -0.716 -5.0
+-+11.0 -0.591 -7.0
+-+8.25 -0.466 -5.0
+-+5.5 -0.341 -3.0
+-+2.75 -0.216 -5.0
+-+0.0 -0.091 -7.0
+-diff --git a/PythonClient/multirotor/sine_path.py b/PythonClient/multirotor/sine_path.py
+-new file mode 100644
+-index 0000000..88dc566
+---- /dev/null
+-+++ b/PythonClient/multirotor/sine_path.py
+-@@ -0,0 +1,81 @@
+-+import setup_path
+-+import airsim
+-+import numpy as np
+-+import time
+-+import os
+-+import keyboard
+-+import argparse
+-+
+-+
+-+def get_args():
+-+    parser = argparse.ArgumentParser()
+-+    parser.add_argument('--ip', default='')
+-+    parser.add_argument('-p', '--path', required=True, help='Path File')
+-+    parser.add_argument('-o', '--output', default='output', help='Output path')
+-+    args = parser.parse_args()
+-+    return args
+-+
+-+
+-+def main():
+-+    # Load path
+-+    args = get_args()
+-+    path = []
+-+    with open(args.path, 'r') as f:
+-+        for line in f:
+-+            items = line.strip().split()
+-+            path.append(airsim.Vector3r(float(items[0]), float(items[1]), float(items[2])))
+-+
+-+    # Setup airsim drone
+-+    client = airsim.MultirotorClient(ip=args.ip)
+-+    client.reset()
+-+    client.confirmConnection()
+-+    client.enableApiControl(True)
+-+    client.armDisarm(True)
+-+
+-+    # assign ids
+-+    time.sleep(2)
+-+
+-+    print("Initializing camera ...")
+-+    # initializing camera
+-+    responses = client.simGetImages([airsim.ImageRequest("0", airsim.ImageType.Scene, False, False),
+-+                                    airsim.ImageRequest("0", airsim.ImageType.Segmentation, False, False)])
+-+    time.sleep(2)
+-+
+-+    print("Initializing Done ...")
+-+
+-+    starting = [0, -0.01, -0.01]
+-+    print("taking off..")
+-+    client.takeoffAsync().join()
+-+    # time.sleep(1)
+-+
+-+    print("Going to starting point")
+-+    client.landAsync().join()
+-+
+-+    # Wait for 'g' key presss
+-+    print("Press 'g' (from inside unreal viewport) to start recording")
+-+    #keyboard.wait('g')
+-+
+-+    client.moveToZAsync(-4,3).join()
+-+    client.moveToZAsync(-7, 3).join()
+-+    client.moveToZAsync(-2, 3).join()
+-+    client.moveToZAsync(1, 3).join()
+-+    client.moveToZAsync(-2, 3).join()
+-+    client.moveToZAsync(1, 3).join()
+-+    client.moveToPositionAsync(0, 0, -1, 1).join()
+-+
+-+    print("flying on smooth path..")
+-+    client.moveOnPathAsync(path, 0.5, np.inf, airsim.DrivetrainType.ForwardOnly, airsim.YawMode(False, 0)).join()
+-+
+-+    # End motion and recording
+-+    print("Done ...")
+-+    client.moveToZAsync(0, 3).join()
+-+    client.landAsync().join()
+-+    time.sleep(1)
+-+    client.enableApiControl(False)
+-+    time.sleep(1)
+-+    print("connection closed...")
+-+
+-+
+-+if __name__ == '__main__':
+-+    main()
+-+
+-diff --git a/ros/src/airsim_ros_pkgs/include/airsim_ros_wrapper.h b/ros/src/airsim_ros_pkgs/include/airsim_ros_wrapper.h
+-index 6260b89..b453395 100644
+---- a/ros/src/airsim_ros_pkgs/include/airsim_ros_wrapper.h
+-+++ b/ros/src/airsim_ros_pkgs/include/airsim_ros_wrapper.h
+-@@ -50,6 +50,7 @@ STRICT_MODE_OFF //todo what does this do?
+- #include <sensor_msgs/NavSatFix.h>
+- #include <airsim_ros_pkgs/Altimeter.h> //hector_uav_msgs defunct?
+- #include <sensor_msgs/MagneticField.h>
+-+#include <sensor_msgs/PointCloud.h>
+- #include <sensor_msgs/PointCloud2.h>
+- #include <sensor_msgs/Range.h>
+- #include <rosgraph_msgs/Clock.h>
+-@@ -138,6 +139,7 @@ public:
+- 
+-     void initialize_airsim();
+-     void initialize_ros();
+-+    void assign_mesh_ids();
+- 
+-     // std::vector<ros::CallbackQueue> callback_queues_;
+-     ros::AsyncSpinner img_async_spinner_;
+-@@ -230,6 +232,8 @@ private:
+-     void vel_cmd_all_world_frame_cb(const airsim_ros_pkgs::VelCmd& msg);
+-     void vel_cmd_all_body_frame_cb(const airsim_ros_pkgs::VelCmd& msg);
+- 
+-+    void path_cmd_world_frame_cb(const sensor_msgs::PointCloudConstPtr& pcd);
+-+
+-     // void vel_cmd_body_frame_cb(const airsim_ros_pkgs::VelCmd& msg, const std::string& vehicle_name);
+-     void gimbal_angle_quat_cmd_cb(const airsim_ros_pkgs::GimbalAngleQuatCmd& gimbal_angle_quat_cmd_msg);
+-     void gimbal_angle_euler_cmd_cb(const airsim_ros_pkgs::GimbalAngleEulerCmd& gimbal_angle_euler_cmd_msg);
+-@@ -304,6 +308,8 @@ private:
+-     // subscriber / services for ALL robots
+-     ros::Subscriber vel_cmd_all_body_frame_sub_;
+-     ros::Subscriber vel_cmd_all_world_frame_sub_;
+-+    ros::Subscriber path_cmd_world_frame_sub_;
+-+
+-     ros::ServiceServer takeoff_all_srvr_;
+-     ros::ServiceServer land_all_srvr_;
+- 
+-@@ -359,6 +365,9 @@ private:
+-     tf2_ros::Buffer tf_buffer_;
+-     tf2_ros::TransformListener tf_listener_;
+- 
+-+    // Planning flag
+-+    bool path_received = false;
+-+
+-     /// ROS params
+-     double vel_cmd_duration_;
+- 
+-diff --git a/ros/src/airsim_ros_pkgs/src/airsim_ros_wrapper.cpp b/ros/src/airsim_ros_pkgs/src/airsim_ros_wrapper.cpp
+-index 5e9bf37..0c00278 100644
+---- a/ros/src/airsim_ros_pkgs/src/airsim_ros_wrapper.cpp
+-+++ b/ros/src/airsim_ros_pkgs/src/airsim_ros_wrapper.cpp
+-@@ -54,6 +54,58 @@ AirsimROSWrapper::AirsimROSWrapper(const ros::NodeHandle& nh, const ros::NodeHan
+-     std::cout << "AirsimROSWrapper Initialized!\n";
+- }
+- 
+-+// NOTE: This method is implemented for 'Square Street' environment
+-+// It needs to be modified when using for other environments !!
+-+void AirsimROSWrapper::assign_mesh_ids()
+-+{
+-+    int _id = 2;
+-+    airsim_client_images_.simSetSegmentationObjectID("floor", _id);
+-+    _id++;
+-+    
+-+    std::vector<std::string> other_faces = {"x", "y", "negative_x", "negative_y", "z"};
+-+    std::vector<std::string> ba_faces = {"xx", "yy", "negative_x", "negative_y", "zz"};
+-+
+-+    std::unordered_map<std::string, int> facade_freqs = {
+-+        { "ba", 15 },
+-+        { "bb", 20 },
+-+        { "bc_type_b", 4 },
+-+        { "bd_type_a", 5 },
+-+        { "be", 3 }
+-+    };
+-+
+-+    for (auto& facade: facade_freqs) {
+-+        for (int i = 1; i <= facade.second; i++) {
+-+            std::vector<std::string> faces = other_faces;
+-+            
+-+            if (facade.first == "ba")
+-+                faces = ba_faces;
+-+
+-+            for (unsigned int face_id = 0; face_id < faces.size(); face_id++) {
+-+                std::string mesh_name = facade.first + "_" + faces[face_id];
+-+                if (i > 1)
+-+                    mesh_name += std::to_string(i);
+-+
+-+                airsim_client_images_.simSetSegmentationObjectID(mesh_name, _id);
+-+                _id++;
+-+            }
+-+        }
+-+    }
+-+
+-+    //auto drone = static_cast<msr::airlib::MultirotorRpcLibClient*>(airsim_client_.get());
+-+    //drone->takeoffAsync();
+-+    //drone->hoverAsync();
+-+
+-+    //ROS_INFO("Performing up-down motion");
+-+    //drone->moveToZAsync(-2, 0.5);
+-+    //drone->moveToZAsync(0, 0.5);
+-+    //drone->moveToZAsync(-2.5, 0.5);
+-+
+-+    //std::vector<msr::airlib::Vector3r> path;
+-+    //path.push_back(msr::airlib::Vector3r(0.0, -11.0, -2.5));
+-+
+-+    //drone->moveOnPathAsync(path, float(0.5), float(10000000), msr::airlib::DrivetrainType::MaxDegreeOfFreedom, msr::airlib::YawMode(true, 0.5), -1, 1);
+-+}
+-+
+- void AirsimROSWrapper::initialize_airsim()
+- {
+-     // todo do not reset if already in air?
+-@@ -69,6 +121,7 @@ void AirsimROSWrapper::initialize_airsim()
+-         airsim_client_images_.confirmConnection();
+-         airsim_client_lidar_.confirmConnection();
+- 
+-+
+-         for (const auto& vehicle_name_ptr_pair : vehicle_name_ptr_map_) {
+-             airsim_client_->enableApiControl(true, vehicle_name_ptr_pair.first); // todo expose as rosservice?
+-             airsim_client_->armDisarm(true, vehicle_name_ptr_pair.first); // todo exposes as rosservice?
+-@@ -77,6 +130,8 @@ void AirsimROSWrapper::initialize_airsim()
+-         origin_geo_point_ = airsim_client_->getHomeGeoPoint("");
+-         // todo there's only one global origin geopoint for environment. but airsim API accept a parameter vehicle_name? inside carsimpawnapi.cpp, there's a geopoint being assigned in the constructor. by?
+-         origin_geo_point_msg_ = get_gps_msg_from_airsim_geo_point(origin_geo_point_);
+-+        
+-+        assign_mesh_ids();
+-     }
+-     catch (rpc::rpc_error& e) {
+-         std::string msg = e.get_error().as<std::string>();
+-@@ -289,6 +344,8 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
+-         vel_cmd_group_body_frame_sub_ = nh_private_.subscribe("group_of_robots/vel_cmd_body_frame", 1, &AirsimROSWrapper::vel_cmd_group_body_frame_cb, this);
+-         vel_cmd_group_world_frame_sub_ = nh_private_.subscribe("group_of_robots/vel_cmd_world_frame", 1, &AirsimROSWrapper::vel_cmd_group_world_frame_cb, this);
+- 
+-+        path_cmd_world_frame_sub_ = nh_.subscribe<sensor_msgs::PointCloud>("/rpvio_planner/feasible_path", 1, &AirsimROSWrapper::path_cmd_world_frame_cb, this);
+-+
+-         takeoff_group_srvr_ = nh_private_.advertiseService("group_of_robots/takeoff", &AirsimROSWrapper::takeoff_group_srv_cb, this);
+-         land_group_srvr_ = nh_private_.advertiseService("group_of_robots/land", &AirsimROSWrapper::land_group_srv_cb, this);
+-     }
+-@@ -574,6 +631,89 @@ void AirsimROSWrapper::vel_cmd_all_world_frame_cb(const airsim_ros_pkgs::VelCmd&
+-     }
+- }
+- 
+-+void AirsimROSWrapper::path_cmd_world_frame_cb(const sensor_msgs::PointCloudConstPtr& pcd)
+-+{
+-+    std::cout << "Received path cloud" << std::endl;
+-+
+-+    if (!path_received)
+-+    {    
+-+        std::vector<msr::airlib::Vector3r> path;
+-+        auto drone = static_cast<msr::airlib::MultirotorRpcLibClient*>(airsim_client_.get());
+-+
+-+        for (int i = 0; i < pcd->points.size(); i++)
+-+        {
+-+            geometry_msgs::Point32 pt = pcd->points[i];
+-+            path.push_back(msr::airlib::Vector3r(-pt.y, -pt.x, -2.5));
+-+        }
+-+
+-+        std::cout << "----------Executing received path with " << std::to_string(pcd->points.size()) << " waypoints" << std::endl;
+-+        drone->moveOnPathAsync(path, float(0.5), float(10000000), msr::airlib::DrivetrainType::MaxDegreeOfFreedom, msr::airlib::YawMode(true, 0.5), -1, 1);
+-+
+-+        path_received = true;
+-+    }
+-+
+-+
+-+    // ROS_INFO("Starting to execute the trajectory");
+-+    // msr::airlib::Vector3r mid_position(0.0, -22.0, -2.5);
+-+    // msr::airlib::Vector3r end_position(22.0, -22.0, -2.5);
+-+
+-+    // msr::airlib::MultirotorState current_state = drone->getMultirotorState();
+-+    // msr::airlib::Vector3r current_position = current_state.kinematics_estimated.pose.position;
+-+    // msr::airlib::Vector3r next_direction;
+-+
+-+    // bool mid_reached = false;
+-+
+-+    // if ((end_position - current_position).norm() > 5)
+-+    // {
+-+    //     // drone->simPause(false);
+-+
+-+    //     if ((mid_position - current_position).norm() <= 5)
+-+    //         mid_reached = true;
+-+
+-+    //     if (!mid_reached)
+-+    //         next_direction = mid_position - current_position;
+-+    //     else
+-+    //         next_direction = end_position - current_position;
+-+        
+-+    //     msr::airlib::Vector3r next_position = next_direction;
+-+    //     float next_magnitude = (float) next_direction.norm();
+-+
+-+    //     ROS_INFO("current_position: %f, %f, %f", current_position[0], current_position[1], current_position[2]);
+-+    //     ROS_INFO("next_position: %f, %f, %f", next_position[0], next_position[1], next_position[2]);
+-+
+-+    //     float x_next = (float)current_position[0] +  10.0 * (float)(next_position[0]/next_magnitude);
+-+    //     float y_next = (float)current_position[1] +  10.0 * (float)(next_position[1]/next_magnitude);
+-+    //     float z_next = (float)current_position[2];
+-+
+-+    //     // # client.simPause(True)
+-+    //     // path = []
+-+    //     std::vector<msr::airlib::Vector3r> path;
+-+    //     path.push_back(msr::airlib::Vector3r(x_next, y_next, z_next));
+-+
+-+    //     drone->moveOnPathAsync(path, float(0.5), float(10000000), msr::airlib::DrivetrainType::MaxDegreeOfFreedom, msr::airlib::YawMode(true, 0.5), -1, 1);
+-+    //     // drone->simContinueForTime(5);
+-+    //     // # time.sleep(2)
+-+    //     // # client.simPause(True)
+-+
+-+    //     current_state = drone->getMultirotorState();
+-+    //     current_position = current_state.kinematics_estimated.pose.position;
+-+        
+-+    //     ROS_INFO("Pausing ..\n");
+-+    //     // sleep(2);
+-+    //     // client.simPause(True)
+-+    //     // drone->simPause(true);
+-+    // }
+-+
+-+    // path.push_back(msr::airlib::Vector3r(0.0, -22.0, -5));
+-+    // path.push_back(msr::airlib::Vector3r(22.0, -22.0, -5));
+-+    // path.push_back(msr::airlib::Vector3r(22.0, 0.0, -5));
+-+    // path.push_back(msr::airlib::Vector3r(0.0, 0.0, -5));
+-+
+-+    // drone->moveOnPathAsync(path, float(1.0), float(100000), msr::airlib::DrivetrainType::MaxDegreeOfFreedom, msr::airlib::YawMode(), -1, 1);
+-+    // drone->simPause(false);
+-+    // drone->hoverAsync();
+-+}
+-+
+- // todo support multiple gimbal commands
+- void AirsimROSWrapper::gimbal_angle_quat_cmd_cb(const airsim_ros_pkgs::GimbalAngleQuatCmd& gimbal_angle_quat_cmd_msg)
+- {

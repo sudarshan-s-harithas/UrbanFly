@@ -1,0 +1,30 @@
+diff --git a/vins_estimator/src/utility/visualization.cpp b/vins_estimator/src/utility/visualization.cpp
+index 167e913..1793e02 100644
+--- a/vins_estimator/src/utility/visualization.cpp
++++ b/vins_estimator/src/utility/visualization.cpp
+@@ -243,6 +243,8 @@ void pubPointCloud(const Estimator &estimator, const std_msgs::Header &header)
+     point_cloud.header = header;
+     loop_point_cloud.header = header;
+ 
++    sensor_msgs::ChannelFloat32 u_of_point;
++    sensor_msgs::ChannelFloat32 v_of_point;
+ 
+     for (auto &it_per_id : estimator.f_manager.feature)
+     {
+@@ -261,9 +263,15 @@ void pubPointCloud(const Estimator &estimator, const std_msgs::Header &header)
+         p.y = w_pts_i(1);
+         p.z = w_pts_i(2);
+         point_cloud.points.push_back(p);
++
++        u_of_point.values.push_back(it_per_id.feature_per_frame[0].uv.x());
++        v_of_point.values.push_back(it_per_id.feature_per_frame[0].uv.y());
+     }
+-    pub_point_cloud.publish(point_cloud);
+ 
++    point_cloud.channels.push_back(u_of_point);
++    point_cloud.channels.push_back(v_of_point);
++
++    pub_point_cloud.publish(point_cloud);
+ 
+     // pub margined potin
+     sensor_msgs::PointCloud margin_cloud;
