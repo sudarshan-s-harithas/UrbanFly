@@ -36,7 +36,17 @@ roslaunch airsim_ros_pkgs airsim_node.launch  host:=<ENTER_IP>
 ```
 ### State Estimation 
 
-Clone [VINS-Mono]() repo and apply the vins_mono_changes.patch file. It adds unique feature ids to feature points in the point cloud topic. 
+Clone [VINS-Mono]() repo and run the below command to apply the changes made in VINS-Mono required for UrbanFly. These changes append unique feature ids to feature points in the point cloud topic. 
+
+```
+git apply vins_mono_changes.patch
+```
+
+Then launch the vins estimator node using this command
+
+```
+roslaunch vins_estimator minihattan.launch
+```
 
 ### Mapping
 
@@ -50,8 +60,22 @@ roslaunch rpvio_estimator minihattan.launch
 ```
 
 Additionally, for UrbanScene3D, ros-wrapper over PlaneRCNN should be lauched.
+To run the simulation among real world like buildings, download [UrbanScene3D dataset](https://vcc.tech/UrbanScene3D/) <br />
 
 ### SCP-MMD Planner
+
+SCP-MMD planner is implemented in Python in the folder SCP-MMD planner. It can be launched using the below command, after VINS-Mono and Mapping node is initialized.
+
+```
+python planner_node.py
+```
+
+The command given above publishes the path. Inorder to run the virtual drone in airsim, the below script should be run from another terminal.
+Note: Make sure that airsim python package is installed before running this command
+```
+python path_commander.py
+```
+
 
 ### CEM Planner 
 
