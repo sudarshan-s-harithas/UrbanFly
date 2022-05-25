@@ -34,9 +34,9 @@ git clone https://github.com/sudarshan-s-harithas/UrbanFly.git
 
 In the UrbanFly Planar Mapping Module we provide two independent packages for out SquareStreet and the UrbanScene 3D environment. 
 
-****Note: If complied at once ROS would raise an error informing that there are multiple packages with the same name. 
+#### Note: If the Mapping package is complied at once ROS would raise an error informing that there are multiple packages with the same name. 
 
-A possible solution would be to compile and test  SquareStreet and UrbanScene 3D environment independently. 
+A possible solution would be to compile and test SquareStreet and UrbanScene 3D environment independently. 
 
 ```
 catkin_make -j8
