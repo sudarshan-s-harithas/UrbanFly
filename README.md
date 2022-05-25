@@ -27,6 +27,22 @@ A simulation server with NVIDIA1070 graphics card, AMD Ryzen 7 3800x 8-core proc
 
 ## Build
 
+```
+cd ~/catkin_ws/src/
+git clone https://github.com/sudarshan-s-harithas/UrbanFly.git
+```
+
+In the UrbanFly Planar Mapping Module we provide two independent packages for out SquareStreet and the UrbanScene 3D environment. 
+
+****Note: If complied at once ROS would raise an error informing that there are multiple packages with the same name. 
+
+A possible solution would be to compile and test  SquareStreet and UrbanScene 3D environment independently. 
+
+```
+catkin_make -j8
+source devel/setup.bash
+```
+
 
 ### Start the Simulation 
 
