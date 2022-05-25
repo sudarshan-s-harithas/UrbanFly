@@ -106,7 +106,7 @@ rosrun UrbanFlyCEMPlanner CEMPlanner
 ![](https://github.com/sudarshan-s-harithas/UrbanFly/blob/main/UrbanFlyCEMPlanner/Images/Simulation.gif)
 
 
-#### The Open Source Square Street Dataset for Urban Navigation
+### Square Street Dataset for Urban Navigation
 
 We created the Square Street Dataset which is in the shape of a square, having 47 buildings spread over 0.16 square kilometers. The environment is feature-rich and, therefore, can be easily used for benchmarking monocular vision-based perception and planning pipelines. The whole environment is modular and can be easily expanded or configured to meet custom requirements. 
 
