@@ -112,5 +112,5 @@ We created the Square Street Dataset which is in the shape of a square, having 4
 
 ![](https://github.com/sudarshan-s-harithas/UrbanFly/blob/main/UrbanFlyCEMPlanner/Images/urban_street_square.png)
 
-The Dataset is given in this [link](https://zenodo.org/record/6615491#.Yp2V0hxBxH5)  
+The Dataset and its usage instructions is given in this [link](https://zenodo.org/record/6615491#.Yp2V0hxBxH5)  
 
