@@ -9,7 +9,6 @@ UrbanFly: an uncertainty-aware realtime planning framework for quadrotor navigat
 
 #### Preprint: https://arxiv.org/pdf/2204.00865.pdf
 #### YouTube: [Link](https://www.youtube.com/watch?v=xeoV6GU6MaE&t=3s)
-### **Note: This code repository is under developent** 
 
 
 ## Setup:
