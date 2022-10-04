@@ -8,7 +8,7 @@ UrbanFly: an uncertainty-aware realtime planning framework for quadrotor navigat
 ![](https://github.com/sudarshan-s-harithas/UrbanFly/blob/main/UrbanFlyCEMPlanner/Images/BlockDiagram.png)
 
 #### Preprint: https://arxiv.org/pdf/2204.00865.pdf
-#### YouTube: [Link](https://www.youtube.com/watch?v=xeoV6GU6MaE&t=3s)
+#### Simulation Demonstration Video: [Link](https://www.youtube.com/watch?v=xeoV6GU6MaE&t=3s)
 
 
 ## Setup:
