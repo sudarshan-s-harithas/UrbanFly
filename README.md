@@ -75,6 +75,7 @@ In either case, mapper node can launched using the following command.
 ```
 roslaunch rpvio_estimator minihattan.launch
 ```
+TODO: Add mapping script
 
 Additionally, for UrbanScene3D, ros-wrapper over PlaneRCNN should be lauched.
 To run the simulation among real world like buildings, download [UrbanScene3D dataset](https://vcc.tech/UrbanScene3D/) <br />
